@@ -21,7 +21,7 @@ Usage:
     reversionup -i
 """
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __author__ = "Mardix"
 __license__ = "MIT"
 __NAME__ = "ReversionUp"
@@ -129,7 +129,7 @@ class File(Version):
     """
     filename = None
 
-    def __init__(self, filename="./reversionup.txt"):
+    def __init__(self, filename="./reversionup.cnf"):
         self.filename = filename
         version = "0.0.0"
         if os.path.isfile(filename):
