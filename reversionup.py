@@ -21,7 +21,7 @@ Usage:
     reversionup -i
 """
 
-__version__ = "0.1"
+__version__ = "0.1.1"
 __author__ = "Mardix"
 __license__ = "MIT"
 __NAME__ = "ReversionUp"
