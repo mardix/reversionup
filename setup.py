@@ -3,9 +3,9 @@ DeployPy
 """
 
 from setuptools import setup
-import semversion
+import reversionup
 
-PACKAGE = semversion
+PACKAGE = reversionup
 
 setup(
     name=PACKAGE.__NAME__,
@@ -17,8 +17,8 @@ setup(
     long_description=PACKAGE.__doc__,
     url='http://github.com/mardix/versionup/',
     download_url='http://github.com/mardix/versionup/tarball/master',
-    py_modules=['semversion'],
-    entry_points=dict(console_scripts=['semversion=semversion:main']),
+    py_modules=['reversionup'],
+    entry_points=dict(console_scripts=['reversionup=reversionup:main']),
     keywords=['versionning', 'bump version', 'increment version'],
     platforms='any',
     classifiers=[

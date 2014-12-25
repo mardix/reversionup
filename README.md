@@ -1,10 +1,10 @@
-# SemVersion
+# ReversionUp
 ---
 
-SemVersion is a simple command line tool that helps you increment the version number 
+ReversionUp, is a simple command line tool that helps you increment the version number
 of your project.
 
-SemVersion follows strictly the 2.0.0 version of the [SemVer](http://semver.org/) scheme.
+ReversionUp follows strictly the 2.0.0 version of the [SemVer](http://semver.org/) scheme.
 
 Version must be in the following scheme:
 
@@ -12,63 +12,63 @@ Version must be in the following scheme:
    
 - major.minor.patch-prerelease+build
 
-SemVersion can be used along with Git to increment the version on each commit. 
+ReversionUp can be used along with Git to increment the version on each commit. 
 
 
 ---
 
 ## | Install
 
-     pip install semversion
+     pip install reversionup
     
 
-## | Command Line Tool: *semversion*
+## | Command Line Tool: *reversionup*
 
-Use the command `semversion` in the command line to increment the version number.
+Use the command `reversionup` in the command line to increment the version number.
 
-	semversion 
+	reversionup 
 	
-In the current working directory, SemVersion will create `semversion.txt`, which is a one line text file that will contain the version. 
+In the current working directory, ReversionUp will create `reversionup.txt`, which is a one line text file that will contain the version. 
 
 Accessed for the first time, the version will be `0.0.0`. But the commands below will help you increment the major, minor and patch number of the file.
 
 ---
 
-** semversion -i **
+** reversionup -i **
 
 Increment the patch number
 
-	semversion -i
+	reversionup -i
 
  	> 0.0.1
 
 ---
 
-** semversion -i (-p|--patch) **
+**reversionup -i (-p|--patch)**
 
 Increment the patch number
 
-	semversion -i -p
+	reversionup -i -p
 
  	> 0.0.2
 
 ---
 
-** semversion -i (-n|--minor) **
+**reversionup -i (-n|--minor)**
 
 Increment the minor number and reset the patch
 
-	semversion -i -n
+	reversionup -i -n
 
  	> 0.1.0
 
 ---
 
-** semversion -i (-m|--major) **
+**reversionup -i (-m|--major)**
 
 Increment the major number and reset the minor and the patch number
 	
-	semversion -i -m
+	reversionup -i -m
 	
  	> 1.0.0
 
@@ -76,12 +76,12 @@ Increment the major number and reset the minor and the patch number
 ---
 
 
-** semversion -i (-v|--version) [version]**
+**reversionup -i (-v|--version) [version]**
 
 Insert your own version (semver compatible) version
 
 
-	semversion -i -v 1.4.10
+	reversionup -i -v 1.4.10
 	
 	> 1.4.10
 
@@ -93,11 +93,11 @@ Insert your own version (semver compatible) version
 
 ### Increment Version 
 
-	import semversion
+	import reversionup
 	
-	semversion_file = "./semversion.txt"
+	reversionup_file = "./reversionup.txt"
 	
-	v = semversion.File(semversion_file)
+	v = reversionup.File(reversionup_file)
 	
 	# increment major
 	v.inc_major()
@@ -113,11 +113,11 @@ Insert your own version (semver compatible) version
 	
 ### Read Version
 
-	import semversion
+	import reversionup
 	
-	semversion_file = "./semversion.txt"
+	reversionup_file = "./reversionup.txt"
 	
-	v = semversion.File(semversion_file)
+	v = reversionup.File(reversionup_file)
 	
 	my_app_version = v.version 
 	

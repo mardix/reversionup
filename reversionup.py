@@ -1,10 +1,10 @@
 """
-SemVersion
+ReversionUp
 
-SemVersion is a simple command line tool that helps you increment the version number
+ReversionUp, is a simple command line tool that helps you increment the version number
 of your project.
 
-SemVersion follows strictly the 2.0.0 version of the [SemVer](http://semver.org/) scheme.
+ReversionUp follows strictly the 2.0.0 version of the [SemVer](http://semver.org/) scheme.
 
 Version must be in the following scheme:
 
@@ -12,19 +12,19 @@ Version must be in the following scheme:
 
 - major.minor.patch-prerelease+build
 
-SemVersion can be used along with Git to increment the version on each commit.
+ReversionUp can be used along with Git to increment the version on each commit.
 
-> [SemVersion](https://github.com/mardix/semversion)
+> [ReversionUp](https://github.com/mardix/reversionup)
 
 Usage:
 
-    semversion -i
+    reversionup -i
 """
 
 __version__ = "0.1"
 __author__ = "Mardix"
 __license__ = "MIT"
-__NAME__ = "SemVersion"
+__NAME__ = "ReversionUp"
 
 
 import os
@@ -32,7 +32,7 @@ import re
 import argparse
 
 CWD = os.getcwd()
-semversion_file = CWD + "/semversion.txt"
+reversionup_file = CWD + "/reversionup.txt"
 
 
 _REGEX = re.compile('^(?P<major>(?:0|[1-9][0-9]*))'
@@ -123,13 +123,13 @@ class Version(object):
 
 class File(Version):
     """
-    To edit a semversion file
+    To edit a reversionup file
     The file must contain 1 line, which is the version to edit
     If the file doesn't exist it will create it
     """
     filename = None
 
-    def __init__(self, filename="./semversion.txt"):
+    def __init__(self, filename="./reversionup.txt"):
         self.filename = filename
         version = "0.0.0"
         if os.path.isfile(filename):
@@ -174,7 +174,7 @@ def main():
 
         arg = parser.parse_args()
 
-        version = File(semversion_file)
+        version = File(reversionup_file)
         if arg.inc:
             if arg.version:
                 _version = arg.version
