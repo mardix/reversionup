@@ -32,7 +32,7 @@ import re
 import argparse
 
 CWD = os.getcwd()
-reversionup_file = CWD + "/reversionup.txt"
+reversionup_file = CWD + "/reversionup.cnf"
 
 
 _REGEX = re.compile('^(?P<major>(?:0|[1-9][0-9]*))'
