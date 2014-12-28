@@ -167,7 +167,7 @@ First (create if not exists) edit `.git/hooks/pre-commit` and add the code below
 	#!/bin/sh
 	cd ./
 	reversionup -i
-	git add .
+	git add -p
 
 Save it and type on the command line `chmod +x .git/hooks/pre-commit`
 
