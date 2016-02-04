@@ -79,7 +79,10 @@ def build_version(parseinfo):
     return version
 
 def run(cmd):
-    subprocess.call(cmd.strip(), shell=True)
+    process = subprocess.Popen(cmd, shell=True,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+    return process.communicate()[0]
 
 class Version(object):
     """
@@ -180,7 +183,7 @@ def main():
                            action="store")
         parser.add_argument("--git-tag",
                            help="To GIT TAG the release",
-                           action="store")
+                           action="store_true")
         arg = parser.parse_args()
         version = File(reversionup_file)
 
@@ -198,14 +201,16 @@ def main():
             version.write()
 
         print("-" * 80)
-        print("ReversionUp: %s" % version.version)
+        print("%s: %s" % (__NAME__, version.version))
 
         # Tagging
         if arg.git_tag:
+            test = "if [[ -n $(cd %s; git status --porcelain) ]]; then echo 1; fi" % CWD
+            if run(test).strip() == "1":
+                raise Exception("There are uncommitted files")
             v = "v%s" % version.version
-            s = "git add -A && git commit -m '%s' && git tag -a %s -m '%s'" \
-                % (v, v, v)
-            run("cd %s; %s" % (CWD, s))
+            s = "git tag -a %s -m '%s'" % (v, v)
+            #run("cd %s; %s" % (CWD, s))
 
         print("-" * 80)
 
