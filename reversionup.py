@@ -18,10 +18,17 @@ ReversionUp can be used along with Git to increment the version on each commit.
 
 Usage:
 
-    reversionup -i
+    reversionup : show version number
+
+    reversionup -p : increment path
+
+    reversionup -n : increment minor
+
+    reversionup -m : increment major
+
 """
 
-__version__ = "0.1.2"
+__version__ = "0.2.0"
 __author__ = "Mardix"
 __license__ = "MIT"
 __NAME__ = "ReversionUp"
@@ -30,10 +37,11 @@ __NAME__ = "ReversionUp"
 import os
 import re
 import argparse
+import subprocess
 
 CWD = os.getcwd()
-reversionup_file = CWD + "/reversionup.cnf"
 
+reversionup_file = CWD + "/reversionup.cfg"
 
 _REGEX = re.compile('^(?P<major>(?:0|[1-9][0-9]*))'
                     '\.(?P<minor>(?:0|[1-9][0-9]*))'
@@ -70,6 +78,8 @@ def build_version(parseinfo):
         version += parseinfo["build"]
     return version
 
+def run(cmd):
+    subprocess.call(cmd.strip(), shell=True)
 
 class Version(object):
     """
@@ -129,7 +139,7 @@ class File(Version):
     """
     filename = None
 
-    def __init__(self, filename="./reversionup.cnf"):
+    def __init__(self, filename="./reversionup.cfg"):
         self.filename = filename
         version = "0.0.0"
         if os.path.isfile(filename):
@@ -156,37 +166,48 @@ def main():
     """
     try:
         parser = argparse.ArgumentParser(description="%s %s" % (__NAME__, __version__))
-        parser.add_argument("-i", "--inc",
-                            help="Automatically increment the version number",
-                            action="store_true")
-        parser.add_argument("-m", "--major",
-                           help="Increment MAJOR version and reset minor and patch [ie -i -m]",
+        parser.add_argument("-p", "--patch",
+                           help="Increment PATCH version [ie reversionup -p]",
                            action="store_true")
         parser.add_argument("-n", "--minor",
-                           help="Increment MINOR version and reset patch [ie -i -n]",
+                           help="Increment MINOR version and reset patch [ie reversionup -n]",
                            action="store_true")
-        parser.add_argument("-p", "--patch",
-                           help="Increment PATCH version [ie -i -p]",
+        parser.add_argument("-m", "--major",
+                           help="Increment MAJOR version and reset minor and patch [ie reversionup -m]",
                            action="store_true")
         parser.add_argument("-v", "--version",
-                           help="Manually enter the version number to bump to [ie: -i -v 1.2.4]",
+                           help="Manually enter the version number to bump to [ie: reversionup  -v 1.2.4]",
                            action="store")
-
+        parser.add_argument("--git-tag",
+                           help="To GIT TAG the release",
+                           action="store")
         arg = parser.parse_args()
-
         version = File(reversionup_file)
-        if arg.inc:
-            if arg.version:
-                _version = arg.version
-                version.write(_version)
-            else:
-                if arg.major:
-                    version.inc_major()
-                elif arg.minor:
-                    version.inc_minor()
-                else:
-                    version.inc_patch()
-                version.write()
-        print(version.version)
+
+        if arg.version:
+            _version = arg.version
+            version.write(_version)
+        elif arg.patch:
+            version.inc_patch()
+            version.write()
+        elif arg.minor:
+            version.inc_minor()
+            version.write()
+        elif arg.major:
+            version.inc_major()
+            version.write()
+
+        print("-" * 80)
+        print("ReversionUp: %s" % version.version)
+
+        # Tagging
+        if arg.git_tag:
+            v = "v%s" % version.version
+            s = "git add -A && git commit -m '%s' && git tag -a %s -m '%s'" \
+                % (v, v, v)
+            run("cd %s; %s" % (CWD, s))
+
+        print("-" * 80)
+
     except Exception as ex:
-        print("Exception: %s" % ex.message)
+        print("Error: %s" % ex.message)

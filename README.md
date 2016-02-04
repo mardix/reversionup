@@ -28,47 +28,47 @@ Use the command `reversionup` in the command line to increment the version numbe
 
 	reversionup 
 	
-In the current working directory, ReversionUp will create `reversionup.cnf`, which is a one line text file that will contain the version.
+In the current working directory, ReversionUp will create `reversionup.cfg`, which is a one line text file that will contain the version.
 
 Accessed for the first time, the version will be `0.0.0`. But the commands below will help you increment the major, minor and patch number of the file.
 
 ---
 
-**reversionup -i**
+**reversionup**
 
-Increment the patch number
+Show the current version number
 
-	reversionup -i
+	reversionup
 
  	> 0.0.1
 
 ---
 
-**reversionup -i (-p|--patch)**
+**reversionup (-p|--patch)**
 
 Increment the patch number
 
-	reversionup -i -p
+	reversionup -p
 
  	> 0.0.2
 
 ---
 
-**reversionup -i (-n|--minor)**
+**reversionup (-n|--minor)**
 
 Increment the minor number and reset the patch
 
-	reversionup -i -n
+	reversionup -n
 
  	> 0.1.0
 
 ---
 
-**reversionup -i (-m|--major)**
+**reversionup (-m|--major)**
 
 Increment the major number and reset the minor and the patch number
 
-	reversionup -i -m
+	reversionup -m
 
  	> 1.0.0
 
@@ -76,11 +76,11 @@ Increment the major number and reset the minor and the patch number
 ---
 
 
-**reversionup -i (-v|--version) [version]**
+**reversionup (-v|--version) [version]**
 
 Insert your own version (semver compatible) version
 
-	reversionup -i -v 1.4.10
+	reversionup -v 1.4.10
 
 	> 1.4.10
 
@@ -91,7 +91,7 @@ Insert your own version (semver compatible) version
 
 As a module you can use the class `reversionup.File(filename)` to access and increment the version.
 
-If a filename is not provided, by default it will access (and create) `reversionup.cnf` in
+If a filename is not provided, by default it will access (and create) `reversionup.cfg` in
 the current directory.
 
 
@@ -166,7 +166,7 @@ First (create if not exists) edit `.git/hooks/pre-commit` and add the code below
 
 	#!/bin/sh
 	cd ./
-	reversionup -i
+	reversionup -p
 	git add reversionup.cnf
 
 Save it and type on the command line `chmod +x .git/hooks/pre-commit`
@@ -175,4 +175,4 @@ Now on each commit it will increase the patch number.
 
 ---
 
-License: MIT - Copyright 2014 Mardix
+License: MIT - Copyright 2014-2016 Mardix
