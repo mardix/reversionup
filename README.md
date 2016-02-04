@@ -87,6 +87,25 @@ Insert your own version (semver compatible) version
 ---
 
 
+**reversionup (--git-tag)**
+
+Added an annoted tag to this version
+
+	reversionup --git-tag
+
+	
+---
+
+
+**reversionup (--git-push-tags)**
+
+To push the tags to the repo
+
+	reversionup --git-push-tags
+
+---
+
+
 ##| Use as Module
 
 As a module you can use the class `reversionup.File(filename)` to access and increment the version.

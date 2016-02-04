@@ -26,6 +26,10 @@ Usage:
 
     reversionup -m : increment major
 
+    reversionup --git-tag : To tag
+
+    reversionup --git-push-tags: to push the tags
+
 """
 
 __version__ = "0.2.0"
@@ -184,6 +188,9 @@ def main():
         parser.add_argument("--git-tag",
                            help="To GIT TAG the release",
                            action="store_true")
+        parser.add_argument("--git-push-tags",
+                           help="To Push tags",
+                           action="store_true")
         arg = parser.parse_args()
         version = File(reversionup_file)
 
@@ -205,14 +212,21 @@ def main():
 
         # Tagging
         if arg.git_tag:
+            v = "v%s" % version.version
+            print("Git Tag: %s" % v)
             test = "if [[ -n $(cd %s; git status --porcelain) ]]; then echo 1; fi" % CWD
             if run(test).strip() == "1":
-                raise Exception("There are uncommitted files")
-            v = "v%s" % version.version
+                raise Exception("Unable to TAG. There are uncommitted files")
             s = "git tag -a %s -m '%s'" % (v, v)
-            #run("cd %s; %s" % (CWD, s))
+            run("cd %s; %s" % (CWD, s))
+
+        if arg.git_push_tags:
+            print("Git Push Tags....")
+            s = "git push --tags"
+            run("cd %s; %s" % (CWD, s))
 
         print("-" * 80)
 
     except Exception as ex:
         print("Error: %s" % ex.message)
+        exit(1)
