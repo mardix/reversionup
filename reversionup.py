@@ -32,7 +32,8 @@ Usage:
 
 """
 
-__version__ = "0.2.3"
+
+__version__ = "0.2.4"
 __author__ = "Mardix"
 __license__ = "MIT"
 __NAME__ = "ReversionUp"
@@ -173,6 +174,9 @@ def main():
     """
     try:
         parser = argparse.ArgumentParser(description="%s %s" % (__NAME__, __version__))
+        parser.add_argument("-v", "--version",
+                           help="Return the version [ie reversionup -v]",
+                           action="store_true")
         parser.add_argument("-p", "--patch",
                            help="Increment PATCH version [ie reversionup -p]",
                            action="store_true")
@@ -182,8 +186,8 @@ def main():
         parser.add_argument("-m", "--major",
                            help="Increment MAJOR version and reset minor and patch [ie reversionup -m]",
                            action="store_true")
-        parser.add_argument("-v", "--version",
-                           help="Manually enter the version number to bump to [ie: reversionup  -v 1.2.4]",
+        parser.add_argument("-e", "--edit",
+                           help="Manually edit the version number to bump to [ie: reversionup  -v 1.2.4]",
                            action="store")
         parser.add_argument("--git-tag",
                            help="To GIT TAG the release",
@@ -194,8 +198,8 @@ def main():
         arg = parser.parse_args()
         version = File(reversionup_file)
 
-        if arg.version:
-            _version = arg.version
+        if arg.edit:
+            _version = arg.edit
             version.write(_version)
         elif arg.patch:
             version.inc_patch()
@@ -206,6 +210,10 @@ def main():
         elif arg.major:
             version.inc_major()
             version.write()
+
+        if arg.version:
+            print(version.version)
+            exit()
 
         print("-" * 80)
         print("%s: %s" % (__NAME__, version.version))

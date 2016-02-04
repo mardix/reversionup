@@ -34,7 +34,7 @@ Accessed for the first time, the version will be `0.0.0`. But the commands below
 
 ---
 
-**reversionup**
+**reversionup or reversionup (-v|--version)**
 
 Show the current version number
 
@@ -76,11 +76,11 @@ Increment the major number and reset the minor and the patch number
 ---
 
 
-**reversionup (-v|--version) [version]**
+**reversionup (-e|--edit) [version]**
 
-Insert your own version (semver compatible) version
+Edit your own version (semver compatible) version
 
-	reversionup -v 1.4.10
+	reversionup -e 1.4.10
 
 	> 1.4.10
 
