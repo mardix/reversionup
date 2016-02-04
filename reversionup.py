@@ -228,7 +228,7 @@ def main():
             s = "git tag -a %s -m '%s'" % (v, v)
             run("cd %s; %s" % (CWD, s))
 
-        if arg.git_push_tags:
+        if arg.push_tags:
             print("Git Push Tags....")
             s = "git push --tags"
             run("cd %s; %s" % (CWD, s))
