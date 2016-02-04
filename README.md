@@ -87,21 +87,21 @@ Edit your own version (semver compatible) version
 ---
 
 
-**reversionup (--git-tag)**
+**reversionup (--tag)**
 
-Added an annoted tag to this version
+Tag the code with the current version. Requires git
 
-	reversionup --git-tag
+	reversionup --tag
 
 	
 ---
 
 
-**reversionup (--git-push-tags)**
+**reversionup (--push-tags)**
 
-To push the tags to the repo
+To push the tags to the repo. Requires git
 
-	reversionup --git-push-tags
+	reversionup --push-tags
 
 ---
 

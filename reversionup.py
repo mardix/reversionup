@@ -189,11 +189,11 @@ def main():
         parser.add_argument("-e", "--edit",
                            help="Manually edit the version number to bump to [ie: reversionup  -v 1.2.4]",
                            action="store")
-        parser.add_argument("--git-tag",
-                           help="To GIT TAG the release",
+        parser.add_argument("--tag",
+                           help="To tag a release. Require git",
                            action="store_true")
-        parser.add_argument("--git-push-tags",
-                           help="To Push tags",
+        parser.add_argument("--push-tags",
+                           help="To Push tags. Require git",
                            action="store_true")
         arg = parser.parse_args()
         version = File(reversionup_file)
@@ -219,7 +219,7 @@ def main():
         print("%s: %s" % (__NAME__, version.version))
 
         # Tagging
-        if arg.git_tag:
+        if arg.tag:
             v = "v%s" % version.version
             print("Git Tag: %s" % v)
             test = "if [[ -n $(cd %s; git status --porcelain) ]]; then echo 1; fi" % CWD
