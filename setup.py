@@ -18,6 +18,7 @@ setup(
     url='http://github.com/mardix/versionup/',
     download_url='http://github.com/mardix/versionup/tarball/master',
     py_modules=['reversionup'],
+    install_requires=["sh==1.11"],
     entry_points=dict(console_scripts=['reversionup=reversionup:main']),
     keywords=['versionning', 'bump version', 'increment version'],
     platforms='any',

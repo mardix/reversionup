@@ -33,7 +33,7 @@ Usage:
 """
 
 
-__version__ = "0.2.4"
+__version__ = "0.3.0"
 __author__ = "Mardix"
 __license__ = "MIT"
 __NAME__ = "ReversionUp"
@@ -43,45 +43,12 @@ import os
 import re
 import argparse
 import subprocess
+import ConfigParser
+import sh
 
 CWD = os.getcwd()
 
-reversionup_file = CWD + "/reversionup.cfg"
-
-_REGEX = re.compile('^(?P<major>(?:0|[1-9][0-9]*))'
-                    '\.(?P<minor>(?:0|[1-9][0-9]*))'
-                    '\.(?P<patch>(?:0|[1-9][0-9]*))'
-                    '(\-(?P<prerelease>[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?'
-                    '(\+(?P<build>[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?$')
-
-def parse(version):
-    """
-    Parse version to major, minor, patch, pre-release, build parts.
-    :params version: string
-    """
-    match = _REGEX.match(version)
-    if not match:
-        raise ValueError("'%s' is not a valid SemVer string" % version)
-    verinfo = match.groupdict()
-    verinfo['major'] = int(verinfo['major'])
-    verinfo['minor'] = int(verinfo['minor'])
-    verinfo['patch'] = int(verinfo['patch'])
-    return verinfo
-
-def build_version(parseinfo):
-    """
-    Build the parseinfo back to string
-    :param parseinfo: dict of {major, minor, patch, prerelease, build}
-    :return: string of major.minor.patch[-release+build]
-    """
-    version = "%s.%s.%s" % (parseinfo["major"], parseinfo["minor"], parseinfo["patch"])
-    if "prerelease" in parseinfo and parseinfo["prerelease"]:
-        version += "-%s" % parseinfo["prerelease"]
-    if "build" in parseinfo and parseinfo["build"]:
-        if "prerelease" in parseinfo and parseinfo["prerelease"]:
-            version += "+"
-        version += parseinfo["build"]
-    return version
+reversionup_file = CWD + "/setup.cfg"
 
 def run(cmd):
     process = subprocess.Popen(cmd, shell=True,
@@ -89,14 +56,89 @@ def run(cmd):
                                stderr=subprocess.PIPE)
     return process.communicate()[0]
 
-class Version(object):
-    """
-    To increase versioning
-    """
-    _version = None
 
-    def __init__(self, version):
-        self._version = parse(version)
+class Reversionup(object):
+    """
+    Class to save the reversion number.
+    """
+    section_name = "reversionup"
+
+    DEFAULT_VERSION = "0.0.0"
+    REGEX = re.compile('^(?P<major>(?:0|[1-9][0-9]*))'
+                       '\.(?P<minor>(?:0|[1-9][0-9]*))'
+                       '\.(?P<patch>(?:0|[1-9][0-9]*))'
+                       '(\-(?P<prerelease>[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?'
+                       '(\+(?P<build>[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?$')
+
+    @classmethod
+    def parse(cls, version):
+        """
+        Parse version to major, minor, patch, pre-release, build parts.
+        :params version: string
+        """
+        match = cls.REGEX.match(version)
+        if not match:
+            raise ValueError("'%s' is not a valid SemVer string" % version)
+        verinfo = match.groupdict()
+        verinfo['major'] = int(verinfo['major'])
+        verinfo['minor'] = int(verinfo['minor'])
+        verinfo['patch'] = int(verinfo['patch'])
+        return verinfo
+
+    @classmethod
+    def build_version(cls, parseinfo):
+        """
+        Build the parseinfo back to string
+        :param parseinfo: dict of {major, minor, patch, prerelease, build}
+        :return: string of major.minor.patch[-release+build]
+        """
+        version = "%s.%s.%s" % (parseinfo["major"], parseinfo["minor"], parseinfo["patch"])
+        if "prerelease" in parseinfo and parseinfo["prerelease"]:
+            version += "-%s" % parseinfo["prerelease"]
+        if "build" in parseinfo and parseinfo["build"]:
+            if "prerelease" in parseinfo and parseinfo["prerelease"]:
+                version += "+"
+            version += parseinfo["build"]
+        return version
+
+    def __init__(self, version=DEFAULT_VERSION, file=None):
+        self._config = ConfigParser.ConfigParser()
+        self._config.add_section(self.section_name)
+        self._config.set(self.section_name, "version", version)
+        self._file = file
+        self.version = self.from_file(self._file) if file else version
+
+    @property
+    def version(self):
+        """
+        Return the string of the version
+        :return: String
+        """
+        return self.build_version(self._version)
+
+    @version.setter
+    def version(self, version):
+        self._version = self.parse(version)
+
+    def from_file(self, file):
+        """
+        Load a version from a config file
+        :param file:
+        :return:
+        """
+        self._config.read(file)
+        return self._config.get(self.section_name, "version")
+
+
+    def write(self, file=None):
+        """
+        To write the config to file
+        :param file:
+        :return:
+        """
+        self._config.set(self.section_name, "version", self.version)
+        with open(file or self._file, "w+") as f:
+            self._config.write(f)
 
     def inc_major(self):
         """
@@ -129,43 +171,7 @@ class Version(object):
         return the string of the version
         :return: Object
         """
-        return build_version(self._version)
-
-    @property
-    def version(self):
-        """
-        Return the string of the version
-        :return: String
-        """
-        return self.__str__()
-
-class File(Version):
-    """
-    To edit a reversionup file
-    The file must contain 1 line, which is the version to edit
-    If the file doesn't exist it will create it
-    """
-    filename = None
-
-    def __init__(self, filename="./reversionup.cfg"):
-        self.filename = filename
-        version = "0.0.0"
-        if os.path.isfile(filename):
-            with open(filename) as f:
-                version = f.readline().strip() or "0.0.0"
-        super(self.__class__, self).__init__(version)
-
-    def write(self, version=None):
-        """
-        Write the version to file
-        :param version: string. A valid semver to use
-        :return:
-        """
-        if version:
-            super(self.__class__, self).__init__(version)
-
-        with open(self.filename, "wb") as f:
-            f.write(self.__str__())
+        return self.version
 
 def main():
     """
@@ -196,24 +202,25 @@ def main():
                            help="To Push tags. Require git",
                            action="store_true")
         arg = parser.parse_args()
-        version = File(reversionup_file)
+
+        rvnup = Reversionup(file=reversionup_file)
 
         if arg.edit:
-            _version = arg.edit
-            version.write(_version)
+            rvnup.version = arg.edit
         elif arg.patch:
-            version.inc_patch()
-            version.write()
+            rvnup.inc_patch()
         elif arg.minor:
-            version.inc_minor()
-            version.write()
+            rvnup.inc_minor()
         elif arg.major:
-            version.inc_major()
-            version.write()
+            rvnup.inc_major()
+        #rvnup.write()
 
-        if arg.version:
-            print(version.version)
-            exit()
+        print(rvnup.version)
+
+        with sh.pushd(CWD):
+            print type(sh.git("status", "--porcelain"))
+
+        exit()
 
         print("-" * 80)
         print("%s: %s" % (__NAME__, version.version))
