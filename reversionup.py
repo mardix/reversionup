@@ -29,18 +29,15 @@ Usage:
 """
 
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 __author__ = "Mardix"
 __license__ = "MIT"
 __NAME__ = "ReversionUp"
 
-
 import os
 import re
 import argparse
-import subprocess
 import ConfigParser
-
 
 CWD = os.getcwd()
 reversionup_file = CWD + "/setup.cfg"
@@ -177,11 +174,11 @@ def main():
         parser.add_argument("-p", "--patch",
                            help="Increment PATCH version [ie reversionup -p]",
                            action="store_true")
-        parser.add_argument("-n", "--minor",
-                           help="Increment MINOR version and reset patch [ie reversionup -n]",
+        parser.add_argument("-m", "--minor",
+                           help="Increment MINOR version and reset patch [ie reversionup -m]",
                            action="store_true")
-        parser.add_argument("-m", "--major",
-                           help="Increment MAJOR version and reset minor and patch [ie reversionup -m]",
+        parser.add_argument("-j", "--major",
+                           help="Increment MAJOR version and reset minor and patch [ie reversionup -j]",
                            action="store_true")
         parser.add_argument("-e", "--edit",
                            help="Manually edit the version number to bump to [ie: reversionup  -e 1.2.4]",

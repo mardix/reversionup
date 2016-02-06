@@ -1,6 +1,6 @@
-# ReversionUp 
+# Reversionup 
 
-version: 0.3.x
+version: 0.4.x
 
 ---
 
@@ -18,20 +18,26 @@ Version must be in the following scheme:
 
 ---
 
-## | Install
+### Install
 
      pip install reversionup
     
 
-## | Command Line Tool: *reversionup*
+## *reversionup* (cli)
 
-Use the command `reversionup` in the command line to increment the version number.
+Reversionup is best used in the command line to quickly increment version number.
 
 	reversionup 
 	
-In the current working directory, ReversionUp will create `reversionup.cfg`, which is a one line text file that will contain the version.
+When launched for the first time `setup.cfg` will be created. It has a section 
+ `reversionup` containing the current version. 
 
-Accessed for the first time, the version will be `0.0.0`. But the commands below will help you increment the major, minor and patch number of the file.
+    # setup.cfg
+    
+    [reversionup]
+    version = 0.0.1
+    
+Upon using the commands below, you'll be able to  increment the major, minor and patch number of the file.
 
 ---
 
@@ -55,21 +61,21 @@ Increment the patch number
 
 ---
 
-**reversionup (-n|--minor)**
+**reversionup (-m|--minor)**
 
 Increment the minor number and reset the patch
 
-	reversionup -n
+	reversionup -m
 
  	> 0.1.0
 
 ---
 
-**reversionup (-m|--major)**
+**reversionup (-j|--major)**
 
 Increment the major number and reset the minor and the patch number
 
-	reversionup -m
+	reversionup -j
 
  	> 1.0.0
 
@@ -91,7 +97,7 @@ Edit your own version (semver compatible) version
 ---
 
 
-##| Use as Module
+##Use as Module
 
 As a module you can use the class `reversionup.Reversionup(version="0.0.0", file=None)` to access and increment the version.
 

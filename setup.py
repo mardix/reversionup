@@ -1,5 +1,5 @@
 """
-DeployPy
+Reversionup
 """
 
 from setuptools import setup
