@@ -122,10 +122,10 @@ to save the versioning data.
 	rvnup.inc_major()
 	
 	# increment minor and reset patch
-	# rvnup.inc_minor()
+	rvnup.inc_minor()
 	
 	# increment patch
-	# rvnup.inc_patch()
+	rvnup.inc_patch()
 	
 	# set the version manually 
 	rvnup.version = "1.2.3"
@@ -147,10 +147,10 @@ to save the versioning data.
 	rvnup.inc_major()
 	
 	# increment minor and reset patch
-	# rvnup.inc_minor()
+	rvnup.inc_minor()
 	
 	# increment patch
-	# rvnup.inc_patch()
+	rvnup.inc_patch()
 	
 	# set the version manually 
 	rvnup.version = "1.2.3"
