@@ -1,8 +1,11 @@
-# ReversionUp
+# ReversionUp 
+
+version: 0.3.x
+
 ---
 
-ReversionUp, is a straight simple command line tool that helps you increment the version number
-of your project.
+ReversionUp, is a straight simple python module that helps you increment the version number
+of your project. It can be used in the command line or accessed from your code.
 
 ReversionUp follows strictly the 2.0.0 version of the [SemVer](http://semver.org/) scheme.
 
@@ -11,8 +14,6 @@ Version must be in the following scheme:
 - major.minor.patch
    
 - major.minor.patch-prerelease+build
-
-ReversionUp can be used along with Git to increment the version on each commit. 
 
 
 ---
@@ -87,91 +88,76 @@ Edit your own version (semver compatible) version
 ---
 
 
-**reversionup (--tag)**
-
-Tag the code with the current version. Requires git
-
-	reversionup --tag
-
-	
----
-
-
-**reversionup (--push-tags)**
-
-To push the tags to the repo. Requires git
-
-	reversionup --push-tags
-
 ---
 
 
 ##| Use as Module
 
-As a module you can use the class `reversionup.File(filename)` to access and increment the version.
+As a module you can use the class `reversionup.Reversionup(version="0.0.0", file=None)` to access and increment the version.
 
-If a filename is not provided, by default it will access (and create) `reversionup.cfg` in
-the current directory.
+## Examples
+ 
+It is recommended to have a file `setup.cfg` with the option. This file will be used 
+to save the versioning data.
 
-
-### Increment Version 
-
-	import reversionup
+    
+	# setup.cfg
 	
-	v = reversionup.File()
+    [reversionup]
+    version = 0.0.0
+
+
+### Using the setup.cfg file and save the new version
+
+	from reversionup import Reversionup
 	
-	# increment major and reset minor and patch
-	v.inc_major()
+	filename = "setup.cfg"
 	
-	# increment minor and reset patch
-	# v.inc_minor()
+	rvnup = Reversionup(file=filename)
 	
-	# increment patch
-	# v.inc_patch()
-	
-	# save the file
-	v.write()
-	
-### Read Version
-
-	import reversionup
-
-	v = reversionup.File()
-	
-	my_app_version = v.version 
-	
-	# or
-	# v.__str__()
-
-
-
-### reversionup.Version
-
-This class access and manipulate the version. It doesn't save the version.
-
-To save the version, use and save the property `version` in the object which is a string.
-
-
-	import reversionup
-
-	my_v = "1.2.3"
-
-	v = reversionup.Version(my_v)
+	# read the version
+	version = rvnup.version
 
 	# increment major and reset minor and patch
-	v.inc_major()
-
+	rvnup.inc_major()
+	
 	# increment minor and reset patch
-	# v.inc_minor()
-
+	# rvnup.inc_minor()
+	
 	# increment patch
-	# v.inc_patch()
+	# rvnup.inc_patch()
+	
+	# set the version manually 
+	rvnup.version = "1.2.3"
+	
+	# Save the file
+	rvnup.write()
+	
+	
+### Manually load a version number and save to different file
 
-	# Get the new version
-	my_new_version = v.version
+	from reversionup import Reversionup
 
-	# or
-	# v.__str__()
+	rvnup = Reversionup("0.3.5")
+	
+	# read the version
+	version = rvnup.version
+
+	# increment major and reset minor and patch
+	rvnup.inc_major()
+	
+	# increment minor and reset patch
+	# rvnup.inc_minor()
+	
+	# increment patch
+	# rvnup.inc_patch()
+	
+	# set the version manually 
+	rvnup.version = "1.2.3"
+	
+	# Save the file to a different file
+	rvnup.write("myfile.cfg")
+	
 
 ---
 
@@ -186,7 +172,7 @@ First (create if not exists) edit `.git/hooks/pre-commit` and add the code below
 	#!/bin/sh
 	cd ./
 	reversionup -p
-	git add reversionup.cnf
+	git add setup.cfg
 
 Save it and type on the command line `chmod +x .git/hooks/pre-commit`
 

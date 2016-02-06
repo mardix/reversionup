@@ -1,8 +1,8 @@
 """
 ReversionUp
 
-ReversionUp, is a simple command line tool that helps you increment the version number
-of your project.
+ReversionUp, is a straight simple python module that helps you increment the version number
+of your project. It can be used in the command line or accessed from your code.
 
 ReversionUp follows strictly the 2.0.0 version of the [SemVer](http://semver.org/) scheme.
 
@@ -12,13 +12,12 @@ Version must be in the following scheme:
 
 - major.minor.patch-prerelease+build
 
-ReversionUp can be used along with Git to increment the version on each commit.
 
 > [ReversionUp](https://github.com/mardix/reversionup)
 
 Usage:
 
-    reversionup : show version number
+    reversionup -v : show version number
 
     reversionup -p : increment path
 
@@ -26,9 +25,6 @@ Usage:
 
     reversionup -m : increment major
 
-    reversionup --git-tag : To tag
-
-    reversionup --git-push-tags: to push the tags
 
 """
 
@@ -44,18 +40,10 @@ import re
 import argparse
 import subprocess
 import ConfigParser
-import sh
+
 
 CWD = os.getcwd()
-
 reversionup_file = CWD + "/setup.cfg"
-
-def run(cmd):
-    process = subprocess.Popen(cmd, shell=True,
-                               stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE)
-    return process.communicate()[0]
-
 
 class Reversionup(object):
     """
@@ -179,7 +167,10 @@ def main():
     :return:
     """
     try:
-        parser = argparse.ArgumentParser(description="%s %s" % (__NAME__, __version__))
+        desc = "Versioning scheme: <major.minor.patch> " \
+               "or <major.minor.patch-prerelease+build>"
+        parser = argparse.ArgumentParser(prog="%s %s" % (__NAME__, __version__),
+                                         description=desc)
         parser.add_argument("-v", "--version",
                            help="Return the version [ie reversionup -v]",
                            action="store_true")
@@ -193,14 +184,8 @@ def main():
                            help="Increment MAJOR version and reset minor and patch [ie reversionup -m]",
                            action="store_true")
         parser.add_argument("-e", "--edit",
-                           help="Manually edit the version number to bump to [ie: reversionup  -v 1.2.4]",
+                           help="Manually edit the version number to bump to [ie: reversionup  -e 1.2.4]",
                            action="store")
-        parser.add_argument("--tag",
-                           help="To tag a release. Require git",
-                           action="store_true")
-        parser.add_argument("--push-tags",
-                           help="To Push tags. Require git",
-                           action="store_true")
         arg = parser.parse_args()
 
         rvnup = Reversionup(file=reversionup_file)
@@ -213,34 +198,9 @@ def main():
             rvnup.inc_minor()
         elif arg.major:
             rvnup.inc_major()
-        #rvnup.write()
+        rvnup.write()
 
         print(rvnup.version)
-
-        with sh.pushd(CWD):
-            print sh.git("status", "--porcelain")
-
-        exit()
-
-        print("-" * 80)
-        print("%s: %s" % (__NAME__, version.version))
-
-        # Tagging
-        if arg.tag:
-            v = "v%s" % version.version
-            print("Git Tag: %s" % v)
-            test = "if [[ -n $(cd %s; git status --porcelain) ]]; then echo 1; fi" % CWD
-            if run(test).strip() == "1":
-                raise Exception("Unable to TAG. There are uncommitted files")
-            s = "git tag -a %s -m '%s'" % (v, v)
-            run("cd %s; %s" % (CWD, s))
-
-        if arg.push_tags:
-            print("Git Push Tags....")
-            s = "git push --tags"
-            run("cd %s; %s" % (CWD, s))
-
-        print("-" * 80)
 
     except Exception as ex:
         print("Error: %s" % ex.message)
