@@ -218,7 +218,7 @@ def main():
         print(rvnup.version)
 
         with sh.pushd(CWD):
-            print type(sh.git("status", "--porcelain"))
+            print sh.git("status", "--porcelain")
 
         exit()
 
