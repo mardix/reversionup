@@ -37,7 +37,10 @@ __NAME__ = "ReversionUp"
 import os
 import re
 import argparse
-import ConfigParser
+try:
+    from ConfigParser import ConfigParser
+except ImportError:
+    from configparser import ConfigParser
 
 CWD = os.getcwd()
 reversionup_file = CWD + "/setup.cfg"
@@ -87,7 +90,7 @@ class Reversionup(object):
         return version
 
     def __init__(self, version=DEFAULT_VERSION, file=None):
-        self._config = ConfigParser.ConfigParser()
+        self._config = ConfigParser()
         self._config.add_section(self.section_name)
         self._config.set(self.section_name, "version", version)
         self._file = file
