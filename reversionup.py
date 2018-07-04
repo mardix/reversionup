@@ -29,7 +29,7 @@ Usage:
 """
 
 
-__version__ = "0.4.1"
+__version__ = "0.5.0"
 __author__ = "Mardix"
 __license__ = "MIT"
 __NAME__ = "ReversionUp"
@@ -186,6 +186,9 @@ def main():
         parser.add_argument("-e", "--edit",
                            help="Manually edit the version number to bump to [ie: reversionup  -e 1.2.4]",
                            action="store")
+        parser.add_argument("-d", "--dry-run",
+                           help="Don't write to setup.cfg.",
+                           action="store_true")
         arg = parser.parse_args()
 
         rvnup = Reversionup(file=reversionup_file)
@@ -198,7 +201,8 @@ def main():
             rvnup.inc_minor()
         elif arg.major:
             rvnup.inc_major()
-        rvnup.write()
+        if not arg.dry_run:
+            rvnup.write()
 
         print(rvnup.version)
 
