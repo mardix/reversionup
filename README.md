@@ -1,6 +1,6 @@
 # Reversionup 
 
-version: 0.4.x
+version: 0.5.x
 
 ---
 
@@ -79,6 +79,20 @@ Increment the major number and reset the minor and the patch number
 
  	> 1.0.0
 
+---
+
+**reversionup (-d|--dry-run)**
+
+Don't write the setup.cfg
+
+	reversionup 
+	0.8.0
+
+ 	reversionup -d -p
+	0.8.1
+
+	reversionup
+	0.8.0
 
 ---
 
@@ -186,4 +200,4 @@ Now on each commit it will increase the patch number.
 
 ---
 
-License: MIT - Copyright 2014-2016 Mardix
+License: MIT - Copyright 2014-2016 Mardix, 2018 Sumpfgottheit
